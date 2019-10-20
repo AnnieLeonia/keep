@@ -13,35 +13,35 @@ public class NoteController {
     @Autowired
     private NoteRepository noteRepository;
 
-    @GetMapping("/questions")
-    public List<Note> getQuestions() {
+    @GetMapping("/notes")
+    public List<Note> getNotes() {
         return noteRepository.findAll();
     }
 
 
-    @PostMapping("/questions")
-    public Note createQuestion(@Valid @RequestBody Note note) {
+    @PostMapping("/notes")
+    public Note createNote(@Valid @RequestBody Note note) {
         return noteRepository.save(note);
     }
 
-    @PutMapping("/questions/{questionId}")
-    public Note updateQuestion(@PathVariable Long questionId,
+    @PutMapping("/notes/{noteId}")
+    public Note updateNote(@PathVariable Long noteId,
                                @Valid @RequestBody Note noteRequest) {
-        return noteRepository.findById(questionId)
+        return noteRepository.findById(noteId)
                 .map(note -> {
                     note.setName(noteRequest.getName());
                     note.setDescription(noteRequest.getDescription());
                     return noteRepository.save(note);
-                }).orElseThrow(() -> new ResourceNotFoundException("Question not found with id " + questionId));
+                }).orElseThrow(() -> new ResourceNotFoundException("Note not found with id " + noteId));
     }
 
 
-    @DeleteMapping("/questions/{questionId}")
-    public ResponseEntity<?> deleteQuestion(@PathVariable Long questionId) {
-        return noteRepository.findById(questionId)
+    @DeleteMapping("/notes/{noteId}")
+    public ResponseEntity<?> deleteNote(@PathVariable Long noteId) {
+        return noteRepository.findById(noteId)
                 .map(note -> {
                     noteRepository.delete(note);
                     return ResponseEntity.ok().build();
-                }).orElseThrow(() -> new ResourceNotFoundException("Question not found with id " + questionId));
+                }).orElseThrow(() -> new ResourceNotFoundException("Note not found with id " + noteId));
     }
 }
